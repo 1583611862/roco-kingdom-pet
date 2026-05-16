@@ -545,11 +545,11 @@ body {
     .pet-grid {
         display: grid !important;
         grid-template-columns: repeat(4, 1fr) !important;
-        gap: 1% !important;
+        gap: 3% !important;
     }
     
     .small-card {
-        padding: 2%;
+        padding: 3%;
         border-radius: 8%;
         margin-bottom: 0;
         break-inside: auto;
@@ -559,22 +559,22 @@ body {
         aspect-ratio: 0.8;
         box-shadow: none;
         position: relative;
-        overflow: hidden;
+        overflow: visible;
     }
     
     .card-header {
         position: absolute;
-        top: 2%;
-        right: 2%;
+        top: 1%;
+        right: 1%;
         z-index: 10;
     }
     
     .favorite-btn {
-        width: 12%;
+        width: 13.2%;
         height: 0;
-        padding-bottom: 12%;
-        font-size: 2.5vw;
-        box-shadow: none;
+        padding-bottom: 13.2%;
+        font-size: 2.75vw;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -593,7 +593,7 @@ body {
         border-radius: 10%;
         padding: 3%;
         box-shadow: none;
-        margin-bottom: 4%;
+        margin-bottom: 3%;
     }
     
     .avatar {
@@ -606,13 +606,14 @@ body {
     }
     
     .pet-name {
-        font-size: 2.2vw;
+        font-size: 2.8vw;
         margin-top: 2%;
         padding: 0 2%;
-        line-height: 1.1;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        line-height: 1.2;
+        overflow: visible;
+        white-space: normal;
+        color: #333;
+        font-weight: 500;
     }
     
     .element-icons {
