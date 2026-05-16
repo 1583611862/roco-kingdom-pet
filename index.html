@@ -403,14 +403,14 @@ function adjustPetNameFonts() {
   const nameElements = document.querySelectorAll('.pet-name[data-name]');
   nameElements.forEach(el => {
     const name = el.dataset.name;
-    let fontSize = 7; // 默认字体大小
+    let fontSize = 8; // 默认字体大小
     
     if (name.length >= 6) {
-      fontSize = 5;
-    } else if (name.length >= 5) {
       fontSize = 6;
+    } else if (name.length >= 5) {
+      fontSize = 7;
     } else if (name.length >= 4) {
-      fontSize = 6.5;
+      fontSize = 7.5;
     }
     
     el.style.fontSize = fontSize + 'px';
