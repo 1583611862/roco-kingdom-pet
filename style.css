@@ -532,62 +532,69 @@ body {
 /* 手机端紧凑布局 */
 /* ====================================== */
 @media (max-width: 767px) {
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
     .page-container {
-        padding: 10px !important;
+        padding: 8px !important;
+        margin: 0 !important;
     }
     
     .pet-grid {
         display: grid !important;
         grid-template-columns: repeat(4, 1fr) !important;
-        gap: 4px;
+        gap: 3px !important;
     }
     
     .small-card {
-        padding: 4px;
-        border-radius: 8px;
+        padding: 3px;
+        border-radius: 6px;
         margin-bottom: 0;
         break-inside: auto;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        min-height: 100px;
+        min-height: 85px;
+        box-shadow: none;
     }
     
     .card-header {
-        top: 2px;
-        right: 2px;
+        top: 1px;
+        right: 1px;
     }
     
     .favorite-btn {
-        width: 20px;
-        height: 20px;
-        font-size: 12px;
+        width: 16px;
+        height: 16px;
+        font-size: 10px;
         box-shadow: none;
     }
     
     .pet-id {
-        font-size: 9px;
-        margin-bottom: 2px;
-        padding: 0 2px;
+        font-size: 7px;
+        margin-bottom: 1px;
+        padding: 0 1px;
     }
     
     .avatar {
         width: 100%;
         height: auto;
         aspect-ratio: 1;
-        border-radius: 6px;
+        border-radius: 4px;
     }
     
     .avatar-box {
-        border-radius: 8px;
-        padding: 2px;
+        border-radius: 5px;
+        padding: 1px;
         box-shadow: none;
     }
     
     .pet-name {
-        font-size: 8px;
-        margin-top: 2px;
-        padding: 0 2px;
+        font-size: 7px;
+        margin-top: 1px;
+        padding: 0 1px;
         line-height: 1;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -596,14 +603,14 @@ body {
     
     .element-icons {
         gap: 1px;
-        margin-top: 2px;
+        margin-top: 1px;
         justify-content: center;
         display: flex;
     }
     
     .element-small-icon {
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
     }
     
     /* 手机端显示下拉筛选，隐藏按钮筛选 */
@@ -616,15 +623,36 @@ body {
     }
     
     /* 手机端喜爱筛选栏 */
+    .fav-filter-bar {
+        gap: 6px;
+        margin-bottom: 12px;
+    }
+    
     .fav-filter-btn {
-        padding: 6px 8px;
-        font-size: 12px;
+        padding: 5px 6px;
+        font-size: 11px;
     }
     
     /* 手机端搜索框 */
+    .search-box {
+        margin-bottom: 12px;
+    }
+    
     .search-box input {
-        padding: 10px 14px;
-        font-size: 14px;
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+    
+    /* 手机端用户信息 */
+    .user-info-bar {
+        padding: 8px 10px;
+        margin-bottom: 12px;
+        font-size: 12px;
+    }
+    
+    .user-info-bar code {
+        padding: 4px 8px;
+        font-size: 11px;
     }
 }
 
