@@ -274,18 +274,13 @@ function renderPets(pets) {
         ${favorited ? '⭐' : '☆'}
       </button>
     </div>
+    <div class="pet-id">No.${pet.id}</div>
     <div class="avatar-box" style="background:${bg}">
       <img class="avatar" src="public/images/${pet.id}.png" alt="${pet.name}">
     </div>
-    <h4>编号 #${pet.id}</h4>
-    <h3>${pet.name}</h3>
-    <div style="display:flex;gap:4px;justify-content:center;margin-top:6px;flex-wrap:wrap">
-      ${elems.map(e => `
-      <span class="element" style="background:#f8f8f8; border:2px solid ${elementColors[e]}; color:#0e0e0e; display:inline-flex; align-items:center; gap:4px;">
-        <img src="public/icons/${e}.png" class="element-icon">
-        ${e}
-      </span>
-      `).join('')}
+    <div class="pet-name">${pet.name}</div>
+    <div class="element-icons">
+      ${elems.map(e => `<img src="public/icons/${e}.png" alt="${e}" class="element-small-icon">`).join('')}
     </div>
   `;
     card.onclick = () => location.href = `detail.html?id=${pet.id}`;

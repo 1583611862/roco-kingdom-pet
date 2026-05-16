@@ -336,6 +336,34 @@ body {
     background: #fff3e0;
 }
 
+.pet-id {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.pet-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin-top: 8px;
+    text-align: center;
+}
+
+.element-icons {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 6px;
+}
+
+.element-small-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
 /* 宠物图片 */
 .avatar {
     width: 130px;
@@ -352,7 +380,7 @@ body {
     padding: 5px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, .15);
     width: fit-content;
-    margin: 0 auto 12px;
+    margin: 0 auto;
 }
 
 /* 宠物卡片网格布局 - 瀑布流 */
@@ -379,20 +407,69 @@ body {
     }
 }
 
-/* 卡片标题 */
-.small-card h3 {
-    text-align: center;
-    width: 100%;
-    margin: 4px 0 4px;
+/* ====================================== */
+/* 手机端紧凑布局 */
+/* ====================================== */
+@media (max-width: 767px) {
+    .pet-grid {
+        column-count: 4;
+        column-gap: 6px;
+    }
+    
+    .small-card {
+        padding: 6px;
+        border-radius: 10px;
+        margin-bottom: 6px;
+    }
+    
+    .card-header {
+        top: 4px;
+        right: 4px;
+    }
+    
+    .favorite-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 14px;
+    }
+    
+    .pet-id {
+        font-size: 11px;
+        margin-bottom: 4px;
+        padding: 0 4px;
+    }
+    
+    .avatar {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+        border-radius: 8px;
+    }
+    
+    .avatar-box {
+        border-radius: 10px;
+        padding: 3px;
+    }
+    
+    .pet-name {
+        font-size: 12px;
+        margin-top: 4px;
+        padding: 0 2px;
+        line-height: 1.2;
+    }
+    
+    .element-icons {
+        gap: 2px;
+        margin-top: 3px;
+    }
+    
+    .element-small-icon {
+        width: 14px;
+        height: 14px;
+    }
 }
 
-/* 卡片编号 */
-.small-card h4 {
-    font-size: 14px;
-    color: #666;
-    text-align: center;
-    width: 100%;
-}
+
 
 /* ====================================== */
 /* 属性标签样式 */
