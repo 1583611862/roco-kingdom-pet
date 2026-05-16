@@ -538,43 +538,36 @@ body {
     }
     
     .page-container {
-        padding: 2% !important;
+        padding: 8px !important;
         margin: 0 !important;
     }
     
     .pet-grid {
-        display: grid !important;
-        grid-template-columns: repeat(4, 1fr) !important;
-        gap: 1%;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
     }
     
     .small-card {
-        padding: 3%;
-        border-radius: 8%;
-        margin-bottom: 3%;
-        break-inside: auto;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        aspect-ratio: 0.7;
+        width: calc(25% - 5px);
+        padding: 4px;
+        border-radius: 6px;
         box-shadow: none;
         position: relative;
-        overflow: visible;
     }
     
     .card-header {
         position: absolute;
-        top: 1%;
-        right: 1%;
+        top: 2px;
+        right: 2px;
         z-index: 10;
     }
     
     .favorite-btn {
-        width: 13.2%;
-        height: 0;
-        padding-bottom: 13.2%;
-        font-size: 2.75vw;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.2);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -582,52 +575,52 @@ body {
     }
     
     .pet-id {
-        font-size: 2.5vw;
-        margin-bottom: 2%;
-        padding: 0 2%;
+        font-size: 9px;
+        margin-bottom: 2px;
+        padding: 0 2px;
         line-height: 1;
     }
     
     .avatar-box {
         width: 100%;
-        border-radius: 10%;
-        padding: 3%;
+        border-radius: 6px;
+        padding: 2px;
         box-shadow: none;
-        margin-bottom: 3%;
+        margin-bottom: 2px;
     }
     
     .avatar {
         width: 100%;
         height: auto;
         aspect-ratio: 1;
-        border-radius: 8%;
+        border-radius: 4px;
         object-fit: cover;
         display: block;
     }
     
     .pet-name {
-        font-size: 2.8vw;
-        margin-top: 2%;
-        padding: 0 2%;
-        line-height: 1.2;
-        overflow: visible;
-        white-space: normal;
+        font-size: 9px;
+        margin-top: 2px;
+        padding: 0 2px;
+        line-height: 1.1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         color: #333;
         font-weight: 500;
+        text-align: center;
     }
     
     .element-icons {
-        gap: 2%;
-        margin-top: 2%;
+        gap: 2px;
+        margin-top: 2px;
         justify-content: center;
         display: flex;
     }
     
     .element-small-icon {
-        width: 3vw;
-        height: 3vw;
-        max-width: 12px;
-        max-height: 12px;
+        width: 10px;
+        height: 10px;
         object-fit: contain;
     }
     
@@ -642,46 +635,46 @@ body {
     
     /* 手机端喜爱筛选栏 */
     .fav-filter-bar {
-        gap: 2%;
-        margin-bottom: 3%;
+        gap: 6px;
+        margin-bottom: 12px;
     }
     
     .fav-filter-btn {
-        padding: 2% 3%;
-        font-size: 3.5vw;
+        padding: 6px 8px;
+        font-size: 12px;
         flex: 1;
         min-width: 0;
     }
     
     /* 手机端搜索框 */
     .search-box {
-        margin-bottom: 3%;
+        margin-bottom: 12px;
     }
     
     .search-box input {
-        padding: 2% 3%;
-        font-size: 3.5vw;
+        padding: 8px 12px;
+        font-size: 14px;
     }
     
     /* 手机端用户信息 */
     .user-info-bar {
-        padding: 2% 3%;
-        margin-bottom: 3%;
-        font-size: 3vw;
+        padding: 8px 10px;
+        margin-bottom: 12px;
+        font-size: 12px;
         flex-wrap: wrap;
     }
     
     .user-info-bar code {
-        padding: 1% 2%;
-        font-size: 2.5vw;
+        padding: 4px 8px;
+        font-size: 11px;
         flex: 1;
         min-width: 100px;
     }
     
     .copy-token-btn,
     .import-token-btn {
-        padding: 1% 2%;
-        font-size: 2.5vw;
+        padding: 4px 8px;
+        font-size: 11px;
     }
 }
 
