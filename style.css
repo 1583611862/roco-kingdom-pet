@@ -545,7 +545,7 @@ body {
     .pet-grid {
         display: grid !important;
         grid-template-columns: repeat(4, 1fr) !important;
-        gap: 3% !important;
+        gap: 1% 6% !important;
     }
     
     .small-card {
