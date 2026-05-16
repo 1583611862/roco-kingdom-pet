@@ -51,9 +51,17 @@
     </div>
     <div class="filter-wrapper">
       <div class="filter-bar desktop-filter" id="filterBar"></div>
-      <select class="filter-select mobile-filter" id="filterSelect" onchange="handleSelectChange(this)">
-        <option value="全部">全部属性</option>
-      </select>
+      <!-- 自定义手机端下拉菜单 -->
+      <div class="custom-select mobile-filter" id="customSelect">
+        <div class="select-selected" onclick="toggleDropdown()">
+          <span id="selectedText">
+            <img src="public/icons/全部.png" class="select-icon" />
+            全部属性
+          </span>
+          <span class="select-arrow">▼</span>
+        </div>
+        <div class="select-items" id="selectItems"></div>
+      </div>
     </div>
     <div class="pet-grid" id="petGrid"></div>
   </div>
@@ -213,19 +221,6 @@ function setFilter(filterType) {
   performSearch();
 }
 
-function handleSelectChange(selectEl) {
-  currentElementFilter = selectEl.value;
-  // 需要同时更新桌面端的按钮
-  document.querySelectorAll('.desktop-filter .filter-btn').forEach(btn => {
-    if (btn.dataset.type === selectEl.value) {
-      btn.classList.add('active');
-    } else {
-      btn.classList.remove('active');
-    }
-  });
-  performSearch();
-}
-
 // ========== 搜索功能 ==========
 function handleSearch(value) {
   currentSearch = value.trim().toLowerCase();
@@ -271,13 +266,54 @@ function performSearch() {
   renderPets(filteredPets);
 }
 
+// ========== 自定义下拉菜单功能 ==========
+function toggleDropdown() {
+  const items = document.getElementById("selectItems");
+  items.classList.toggle("select-hide");
+}
+
+function closeDropdown() {
+  const items = document.getElementById("selectItems");
+  if (!items.classList.contains("select-hide")) {
+    items.classList.add("select-hide");
+  }
+}
+
+function selectElement(el) {
+  currentElementFilter = el;
+  
+  // 更新显示
+  const selectedText = document.getElementById("selectedText");
+  const iconPath = el === "全部" ? "public/icons/全部.png" : `public/icons/${el}.png`;
+  selectedText.innerHTML = `<img src="${iconPath}" class="select-icon" />${el === "全部" ? "全部属性" : el}`;
+  
+  // 同步桌面端按钮
+  document.querySelectorAll(".desktop-filter .filter-btn").forEach(b => {
+    if (b.dataset.type === el) {
+      b.classList.add("active");
+    } else {
+      b.classList.remove("active");
+    }
+  });
+  
+  closeDropdown();
+  performSearch();
+}
+
+// 点击其他地方关闭下拉菜单
+document.addEventListener("click", function(e) {
+  if (!e.target.closest(".custom-select")) {
+    closeDropdown();
+  }
+});
+
 // ========== 筛选功能 ==========
 function renderFilters() {
   const bar = document.getElementById("filterBar");
-  const select = document.getElementById("filterSelect");
+  const selectItems = document.getElementById("selectItems");
   // 先清空
   bar.innerHTML = "";
-  select.innerHTML = `<option value="全部">全部属性</option>`;
+  selectItems.innerHTML = "";
 
   allElements.forEach(el => {
     // 桌面端按钮
@@ -302,20 +338,30 @@ function renderFilters() {
     // 点击切换 active
     btn.onclick = (e) => {
       e.stopPropagation();
-      currentElementFilter = el;
-      document.querySelectorAll(".desktop-filter .filter-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      select.value = el;
-      performSearch();
+      selectElement(el);
     };
 
     bar.appendChild(btn);
     
-    // 手机端下拉框选项
-    const option = document.createElement("option");
-    option.value = el;
-    option.textContent = el;
-    select.appendChild(option);
+    // 自定义下拉菜单选项（带图标）
+    const item = document.createElement("div");
+    item.className = "select-option";
+    item.dataset.value = el;
+    
+    if (el !== "全部" && elementColors[el]) {
+      item.style.color = elementColors[el];
+    }
+    
+    const iconPath = el === "全部" ? "public/icons/全部.png" : `public/icons/${el}.png`;
+    const label = el === "全部" ? "全部属性" : el;
+    item.innerHTML = `<img src="${iconPath}" class="select-icon" />${label}`;
+    
+    item.onclick = (e) => {
+      e.stopPropagation();
+      selectElement(el);
+    };
+    
+    selectItems.appendChild(item);
   });
 }
 
