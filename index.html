@@ -35,6 +35,9 @@
 <!-- 内容区域 -->
 <div class="content">
   <div class="page-container">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="🔍 输入名称或编号搜索..." oninput="handleSearch(this.value)">
+    </div>
     <div class="filter-bar" id="filterBar"></div>
     <div class="pet-grid" id="petGrid"></div>
   </div>
@@ -94,10 +97,46 @@ function getFilteredPets(type) {
 }
 
 let currentFilter = '全部';
+let currentSearch = '';
+let searchTimeout = null;
 
 renderFilters();
 renderPets(petList);
 
+// ========== 搜索功能 ==========
+function handleSearch(value) {
+  currentSearch = value.trim().toLowerCase();
+  
+  if (searchTimeout) {
+    clearTimeout(searchTimeout);
+  }
+  
+  searchTimeout = setTimeout(() => {
+    performSearch();
+  }, 300);
+}
+
+function performSearch() {
+  let filteredPets = petList;
+  
+  if (currentFilter === '喜爱') {
+    filteredPets = getFavoritePets();
+  } else if (currentFilter !== '全部') {
+    filteredPets = getFilteredPets(currentFilter);
+  }
+  
+  if (currentSearch) {
+    filteredPets = filteredPets.filter(pet => {
+      const nameMatch = pet.name.toLowerCase().includes(currentSearch);
+      const idMatch = pet.id.toString().includes(currentSearch);
+      return nameMatch || idMatch;
+    });
+  }
+  
+  renderPets(filteredPets);
+}
+
+// ========== 筛选功能 ==========
 function renderFilters() {
   const bar = document.getElementById("filterBar");
   // 先清空
@@ -128,7 +167,7 @@ function renderFilters() {
       btn.classList.add('active');
     }
 
-    // 👇 点击切换 active（单选逻辑，同一时间只有一个选中）
+    // 点击切换 active（单选逻辑，同一时间只有一个选中）
     btn.onclick = (e) => {
       e.stopPropagation();
       currentFilter = el;
@@ -136,12 +175,8 @@ function renderFilters() {
       document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
       // 给当前按钮加 active
       btn.classList.add("active");
-      // 执行筛选
-      if (el === '喜爱') {
-        renderPets(getFavoritePets());
-      } else {
-        renderPets(getFilteredPets(el));
-      }
+      // 执行筛选（包含搜索条件）
+      performSearch();
     };
 
     bar.appendChild(btn);
