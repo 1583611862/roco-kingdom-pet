@@ -30,11 +30,31 @@ const petList = [...petList1, ...petList2, ...petList3, ...petList4, ...petList5
  ...petList31, ...petList32, ...petList33, ...petList34, ...petList35,
 ];
 
-// ========== 喜爱功能 - 本地存储管理 ==========
-const FAVORITES_KEY = 'roco_pet_favorites';
+// ========== 用户令牌系统 ==========
+const USER_TOKEN_KEY = 'roco_user_token';
 
+function generateUserToken() {
+  const timestamp = Date.now().toString(36);
+  const random = Math.random().toString(36).substring(2, 15);
+  return `user_${timestamp}_${random}`;
+}
+
+function getUserToken() {
+  let token = localStorage.getItem(USER_TOKEN_KEY);
+  if (!token) {
+    token = generateUserToken();
+    localStorage.setItem(USER_TOKEN_KEY, token);
+  }
+  return token;
+}
+
+function getFavoritesKey() {
+  return `roco_favorites_${getUserToken()}`;
+}
+
+// ========== 喜爱功能 - 本地存储管理（支持多用户） ==========
 function getFavorites() {
-  const saved = localStorage.getItem(FAVORITES_KEY);
+  const saved = localStorage.getItem(getFavoritesKey());
   return saved ? JSON.parse(saved) : [];
 }
 
@@ -50,8 +70,7 @@ function toggleFavorite(petId) {
   } else {
     favorites.push(petId);
   }
-  localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
-  // 重新渲染详情页以更新喜爱状态
+  localStorage.setItem(getFavoritesKey(), JSON.stringify(favorites));
   renderDetail();
 }
 

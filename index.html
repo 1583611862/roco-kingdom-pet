@@ -35,11 +35,30 @@
 <!-- 内容区域 -->
 <div class="content">
   <div class="page-container">
+    <div class="user-info-bar">
+      <span>您的用户令牌：</span>
+      <code id="userTokenDisplay"></code>
+      <button class="copy-token-btn" onclick="copyUserToken()">📋 复制</button>
+      <button class="import-token-btn" onclick="showImportDialog()">📥 导入令牌</button>
+    </div>
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="🔍 输入名称或编号搜索..." oninput="handleSearch(this.value)">
     </div>
     <div class="filter-bar" id="filterBar"></div>
     <div class="pet-grid" id="petGrid"></div>
+  </div>
+</div>
+
+<!-- 导入令牌对话框 -->
+<div id="importModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <h3>📥 导入用户令牌</h3>
+    <p>如果您之前复制过令牌，可以粘贴到下方来恢复您的喜爱数据：</p>
+    <textarea id="importTokenInput" rows="4" placeholder="粘贴令牌，例如：user_xxx_xxx"></textarea>
+    <div class="modal-buttons">
+      <button class="modal-btn cancel" onclick="closeImportDialog()">取消</button>
+      <button class="modal-btn confirm" onclick="importUserToken()">确认导入</button>
+    </div>
   </div>
 </div>
 
@@ -58,11 +77,31 @@ const petList = [...petList1, ...petList2, ...petList3, ...petList4, ...petList5
 ...petList31, ...petList32, ...petList33, ...petList34, ...petList35,
 ];
 
-// ========== 喜爱功能 - 本地存储管理 ==========
-const FAVORITES_KEY = 'roco_pet_favorites';
+// ========== 用户令牌系统 ==========
+const USER_TOKEN_KEY = 'roco_user_token';
 
+function generateUserToken() {
+  const timestamp = Date.now().toString(36);
+  const random = Math.random().toString(36).substring(2, 15);
+  return `user_${timestamp}_${random}`;
+}
+
+function getUserToken() {
+  let token = localStorage.getItem(USER_TOKEN_KEY);
+  if (!token) {
+    token = generateUserToken();
+    localStorage.setItem(USER_TOKEN_KEY, token);
+  }
+  return token;
+}
+
+function getFavoritesKey() {
+  return `roco_favorites_${getUserToken()}`;
+}
+
+// ========== 喜爱功能 - 本地存储管理（支持多用户） ==========
 function getFavorites() {
-  const saved = localStorage.getItem(FAVORITES_KEY);
+  const saved = localStorage.getItem(getFavoritesKey());
   return saved ? JSON.parse(saved) : [];
 }
 
@@ -78,7 +117,7 @@ function toggleFavorite(petId) {
   } else {
     favorites.push(petId);
   }
-  localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+  localStorage.setItem(getFavoritesKey(), JSON.stringify(favorites));
   renderPets(currentFilter === '喜爱' ? getFavoritePets() : (currentFilter === '全部' ? petList : getFilteredPets(currentFilter)));
   renderFilters();
 }
@@ -94,6 +133,42 @@ function getFilteredPets(type) {
     const el = p.element;
     return Array.isArray(el) ? el.includes(type) : el === type;
   });
+}
+
+// ========== 页面初始化 ==========
+document.getElementById('userTokenDisplay').textContent = getUserToken();
+
+function copyUserToken() {
+  const token = getUserToken();
+  navigator.clipboard.writeText(token).then(() => {
+    alert('令牌已复制到剪贴板！\n如果换浏览器或设备，需要导入此令牌才能恢复喜爱数据。');
+  }).catch(() => {
+    prompt('复制以下令牌：', token);
+  });
+}
+
+function showImportDialog() {
+  document.getElementById('importModal').style.display = 'flex';
+}
+
+function closeImportDialog() {
+  document.getElementById('importModal').style.display = 'none';
+  document.getElementById('importTokenInput').value = '';
+}
+
+function importUserToken() {
+  const newToken = document.getElementById('importTokenInput').value.trim();
+  if (!newToken) {
+    alert('请输入有效的令牌！');
+    return;
+  }
+  
+  if (confirm('确认导入令牌？\n这将切换到新的用户身份，当前设备的喜爱数据会保留。')) {
+    localStorage.setItem(USER_TOKEN_KEY, newToken);
+    alert('令牌导入成功！');
+    closeImportDialog();
+    location.reload();
+  }
 }
 
 let currentFilter = '全部';
