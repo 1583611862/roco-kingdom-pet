@@ -545,13 +545,13 @@ body {
     .pet-grid {
         display: grid !important;
         grid-template-columns: repeat(4, 1fr) !important;
-        gap: 1% 6% !important;
+        gap: 1%;
     }
     
     .small-card {
         padding: 3%;
         border-radius: 8%;
-        margin-bottom: 0;
+        margin-bottom: 6%;
         break-inside: auto;
         display: flex;
         flex-direction: column;
