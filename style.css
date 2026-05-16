@@ -544,14 +544,14 @@ body {
     
     .pet-grid {
         display: grid;
-        grid-template-columns: 25% 25% 25% 25%;
-        gap: 0;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 4px;
         column-count: auto;
     }
     
     .small-card {
-        width: auto;
-        margin: 4px;
+        width: 100%;
+        box-sizing: border-box;
         padding: 6px;
         border-radius: 8px;
         box-shadow: none;
