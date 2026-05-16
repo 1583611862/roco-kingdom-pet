@@ -385,13 +385,35 @@ function renderPets(pets) {
     <div class="avatar-box" style="background:${bg}">
       <img class="avatar" src="public/images/${pet.id}.png" alt="${pet.name}">
     </div>
-    <div class="pet-name">${pet.name}</div>
+    <div class="pet-name" data-name="${pet.name}">${pet.name}</div>
     <div class="element-icons">
       ${elems.map(e => `<img src="public/icons/${e}.png" alt="${e}" class="element-small-icon">`).join('')}
     </div>
   `;
     card.onclick = () => location.href = `detail.html?id=${pet.id}`;
     grid.appendChild(card);
+  });
+  
+  // 渲染完成后调整字体大小
+  setTimeout(adjustPetNameFonts, 0);
+}
+
+// 根据名字长度调整字体大小
+function adjustPetNameFonts() {
+  const nameElements = document.querySelectorAll('.pet-name[data-name]');
+  nameElements.forEach(el => {
+    const name = el.dataset.name;
+    let fontSize = 7; // 默认字体大小
+    
+    if (name.length >= 6) {
+      fontSize = 5;
+    } else if (name.length >= 5) {
+      fontSize = 6;
+    } else if (name.length >= 4) {
+      fontSize = 6.5;
+    }
+    
+    el.style.fontSize = fontSize + 'px';
   });
 }
 
