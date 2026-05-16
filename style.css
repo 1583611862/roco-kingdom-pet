@@ -551,12 +551,12 @@ body {
     .small-card {
         padding: 3%;
         border-radius: 8%;
-        margin-bottom: 6%;
+        margin-bottom: 3%;
         break-inside: auto;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        aspect-ratio: 0.8;
+        aspect-ratio: 0.7;
         box-shadow: none;
         position: relative;
         overflow: visible;
