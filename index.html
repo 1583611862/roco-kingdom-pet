@@ -54,6 +54,47 @@ const petList = [...petList1, ...petList2, ...petList3, ...petList4, ...petList5
 ...petList26, ...petList27, ...petList28, ...petList29, ...petList30,
 ...petList31, ...petList32, ...petList33, ...petList34, ...petList35,
 ];
+
+// ========== 喜爱功能 - 本地存储管理 ==========
+const FAVORITES_KEY = 'roco_pet_favorites';
+
+function getFavorites() {
+  const saved = localStorage.getItem(FAVORITES_KEY);
+  return saved ? JSON.parse(saved) : [];
+}
+
+function isFavorite(petId) {
+  return getFavorites().includes(petId);
+}
+
+function toggleFavorite(petId) {
+  let favorites = getFavorites();
+  const index = favorites.indexOf(petId);
+  if (index > -1) {
+    favorites.splice(index, 1);
+  } else {
+    favorites.push(petId);
+  }
+  localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+  renderPets(currentFilter === '喜爱' ? getFavoritePets() : (currentFilter === '全部' ? petList : getFilteredPets(currentFilter)));
+  renderFilters();
+}
+
+function getFavoritePets() {
+  const favorites = getFavorites();
+  return petList.filter(p => favorites.includes(p.id));
+}
+
+function getFilteredPets(type) {
+  if (type === '全部') return petList;
+  return petList.filter(p => {
+    const el = p.element;
+    return Array.isArray(el) ? el.includes(type) : el === type;
+  });
+}
+
+let currentFilter = '全部';
+
 renderFilters();
 renderPets(petList);
 
@@ -62,11 +103,18 @@ function renderFilters() {
   // 先清空
   bar.innerHTML = "";
 
-  allElements.forEach(el => {
+  const filters = [...allElements, '喜爱'];
+
+  filters.forEach(el => {
     const btn = document.createElement("button");
     btn.className = "filter-btn";
 
-    if (el !== "全部" && elementColors[el]) {
+    if (el === '喜爱') {
+      btn.innerHTML = '⭐ 喜爱';
+      btn.style.backgroundColor = '#fff';
+      btn.style.color = '#ff9800';
+      btn.style.border = '2px solid #ff9800';
+    } else if (el !== "全部" && elementColors[el]) {
       btn.style.backgroundColor = "#fff";
       btn.style.color = elementColors[el];
       btn.style.border = `2px solid ${elementColors[el]}`;
@@ -76,14 +124,24 @@ function renderFilters() {
       btn.style.border = `2px solid #ccc`;
     }
 
+    if (el === currentFilter) {
+      btn.classList.add('active');
+    }
+
     // 👇 点击切换 active（单选逻辑，同一时间只有一个选中）
-    btn.onclick = () => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      currentFilter = el;
       // 先清空所有 active
       document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
       // 给当前按钮加 active
       btn.classList.add("active");
-      // 执行原来的筛选
-      filterPets(el);
+      // 执行筛选
+      if (el === '喜爱') {
+        renderPets(getFavoritePets());
+      } else {
+        renderPets(getFilteredPets(el));
+      }
     };
 
     bar.appendChild(btn);
@@ -98,8 +156,14 @@ function renderPets(pets) {
     card.className = "small-card";
     const elems = Array.isArray(pet.element) ? pet.element : [pet.element];
     const bg = elems.length === 1 ? elementColors[elems[0]] : `linear-gradient(135deg, ${elementColors[elems[0]]}, ${elementColors[elems[1]]})`;
+    const favorited = isFavorite(pet.id);
 
     card.innerHTML = `
+    <div class="card-header">
+      <button class="favorite-btn ${favorited ? 'favorited' : ''}" onclick="event.stopPropagation(); toggleFavorite(${pet.id});">
+        ${favorited ? '⭐' : '☆'}
+      </button>
+    </div>
     <div class="avatar-box" style="background:${bg}">
       <img class="avatar" src="public/images/${pet.id}.png" alt="${pet.name}">
     </div>
@@ -117,15 +181,6 @@ function renderPets(pets) {
     card.onclick = () => location.href = `detail.html?id=${pet.id}`;
     grid.appendChild(card);
   });
-}
-
-function filterPets(type) {
-  if (type === "全部") return renderPets(petList);
-  const filtered = petList.filter(p => {
-    const el = p.element;
-    return Array.isArray(el) ? el.includes(type) : el === type;
-  });
-  renderPets(filtered);
 }
 
 // ========== 返回顶部功能 ==========
