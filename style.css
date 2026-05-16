@@ -172,6 +172,59 @@ body {
 }
 
 /* ====================================== */
+/* 喜爱筛选栏样式 */
+/* ====================================== */
+.fav-filter-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.fav-filter-btn {
+    flex: 1;
+    min-width: 80px;
+    padding: 10px 14px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.fav-filter-btn:hover {
+    border-color: #1976d2;
+}
+
+.fav-filter-btn.active {
+    background: #1976d2;
+    color: white;
+    border-color: #1976d2;
+}
+
+/* ====================================== */
+/* 筛选容器 */
+/* ====================================== */
+.filter-wrapper {
+    margin-bottom: 16px;
+}
+
+.desktop-filter {
+    display: flex;
+}
+
+.mobile-filter {
+    display: none;
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    background: #fff;
+}
+
+/* ====================================== */
 /* 模态框样式 */
 /* ====================================== */
 .modal {
@@ -412,14 +465,18 @@ body {
 /* ====================================== */
 @media (max-width: 767px) {
     .pet-grid {
-        column-count: 4;
-        column-gap: 6px;
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 6px;
     }
     
     .small-card {
         padding: 6px;
         border-radius: 10px;
-        margin-bottom: 6px;
+        margin-bottom: 0;
+        break-inside: auto;
+        display: flex;
+        flex-direction: column;
     }
     
     .card-header {
@@ -452,10 +509,13 @@ body {
     }
     
     .pet-name {
-        font-size: 12px;
+        font-size: 10px;
         margin-top: 4px;
         padding: 0 2px;
         line-height: 1.2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
     
     .element-icons {
@@ -466,6 +526,21 @@ body {
     .element-small-icon {
         width: 14px;
         height: 14px;
+    }
+    
+    /* 手机端显示下拉筛选，隐藏按钮筛选 */
+    .desktop-filter {
+        display: none !important;
+    }
+    
+    .mobile-filter {
+        display: block !important;
+    }
+    
+    /* 手机端喜爱筛选栏 */
+    .fav-filter-btn {
+        padding: 8px 10px;
+        font-size: 13px;
     }
 }
 

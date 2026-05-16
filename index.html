@@ -44,7 +44,17 @@
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="🔍 输入名称或编号搜索..." oninput="handleSearch(this.value)">
     </div>
-    <div class="filter-bar" id="filterBar"></div>
+    <div class="fav-filter-bar">
+      <button class="fav-filter-btn active" id="btnAll" onclick="setFilter('全部')">全部</button>
+      <button class="fav-filter-btn" id="btnFav" onclick="setFilter('喜爱')">⭐ 已喜爱</button>
+      <button class="fav-filter-btn" id="btnNotFav" onclick="setFilter('未喜爱')">☆ 未喜爱</button>
+    </div>
+    <div class="filter-wrapper">
+      <div class="filter-bar desktop-filter" id="filterBar"></div>
+      <select class="filter-select mobile-filter" id="filterSelect" onchange="handleSelectChange(this)">
+        <option value="全部">全部属性</option>
+      </select>
+    </div>
     <div class="pet-grid" id="petGrid"></div>
   </div>
 </div>
@@ -127,8 +137,15 @@ function getFavoritePets() {
   return petList.filter(p => favorites.includes(p.id));
 }
 
+function getNotFavoritePets() {
+  const favorites = getFavorites();
+  return petList.filter(p => !favorites.includes(p.id));
+}
+
 function getFilteredPets(type) {
   if (type === '全部') return petList;
+  if (type === '喜爱') return getFavoritePets();
+  if (type === '未喜爱') return getNotFavoritePets();
   return petList.filter(p => {
     const el = p.element;
     return Array.isArray(el) ? el.includes(type) : el === type;
@@ -172,11 +189,42 @@ function importUserToken() {
 }
 
 let currentFilter = '全部';
+let currentElementFilter = '全部';
 let currentSearch = '';
 let searchTimeout = null;
 
 renderFilters();
 renderPets(petList);
+
+// ========== 新增喜爱筛选相关 ==========
+function setFilter(filterType) {
+  currentFilter = filterType;
+  
+  // 更新按钮状态
+  document.querySelectorAll('.fav-filter-btn').forEach(btn => btn.classList.remove('active'));
+  if (filterType === '全部') {
+    document.getElementById('btnAll').classList.add('active');
+  } else if (filterType === '喜爱') {
+    document.getElementById('btnFav').classList.add('active');
+  } else if (filterType === '未喜爱') {
+    document.getElementById('btnNotFav').classList.add('active');
+  }
+  
+  performSearch();
+}
+
+function handleSelectChange(selectEl) {
+  currentElementFilter = selectEl.value;
+  // 需要同时更新桌面端的按钮
+  document.querySelectorAll('.desktop-filter .filter-btn').forEach(btn => {
+    if (btn.dataset.type === selectEl.value) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+  performSearch();
+}
 
 // ========== 搜索功能 ==========
 function handleSearch(value) {
@@ -194,12 +242,24 @@ function handleSearch(value) {
 function performSearch() {
   let filteredPets = petList;
   
+  // 首先应用喜爱筛选
   if (currentFilter === '喜爱') {
     filteredPets = getFavoritePets();
-  } else if (currentFilter !== '全部') {
-    filteredPets = getFilteredPets(currentFilter);
+  } else if (currentFilter === '未喜爱') {
+    filteredPets = getNotFavoritePets();
+  } else {
+    filteredPets = petList;
   }
   
+  // 然后应用属性筛选
+  if (currentElementFilter !== '全部') {
+    filteredPets = filteredPets.filter(p => {
+      const el = p.element;
+      return Array.isArray(el) ? el.includes(currentElementFilter) : el === currentElementFilter;
+    });
+  }
+  
+  // 最后应用搜索
   if (currentSearch) {
     filteredPets = filteredPets.filter(pet => {
       const nameMatch = pet.name.toLowerCase().includes(currentSearch);
@@ -214,21 +274,18 @@ function performSearch() {
 // ========== 筛选功能 ==========
 function renderFilters() {
   const bar = document.getElementById("filterBar");
+  const select = document.getElementById("filterSelect");
   // 先清空
   bar.innerHTML = "";
+  select.innerHTML = `<option value="全部">全部属性</option>`;
 
-  const filters = [...allElements, '喜爱'];
-
-  filters.forEach(el => {
+  allElements.forEach(el => {
+    // 桌面端按钮
     const btn = document.createElement("button");
     btn.className = "filter-btn";
+    btn.dataset.type = el;
 
-    if (el === '喜爱') {
-      btn.innerHTML = '⭐ 喜爱';
-      btn.style.backgroundColor = '#fff';
-      btn.style.color = '#ff9800';
-      btn.style.border = '2px solid #ff9800';
-    } else if (el !== "全部" && elementColors[el]) {
+    if (el !== "全部" && elementColors[el]) {
       btn.style.backgroundColor = "#fff";
       btn.style.color = elementColors[el];
       btn.style.border = `2px solid ${elementColors[el]}`;
@@ -238,23 +295,27 @@ function renderFilters() {
       btn.style.border = `2px solid #ccc`;
     }
 
-    if (el === currentFilter) {
+    if (el === currentElementFilter) {
       btn.classList.add('active');
     }
 
-    // 点击切换 active（单选逻辑，同一时间只有一个选中）
+    // 点击切换 active
     btn.onclick = (e) => {
       e.stopPropagation();
-      currentFilter = el;
-      // 先清空所有 active
-      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-      // 给当前按钮加 active
+      currentElementFilter = el;
+      document.querySelectorAll(".desktop-filter .filter-btn").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-      // 执行筛选（包含搜索条件）
+      select.value = el;
       performSearch();
     };
 
     bar.appendChild(btn);
+    
+    // 手机端下拉框选项
+    const option = document.createElement("option");
+    option.value = el;
+    option.textContent = el;
+    select.appendChild(option);
   });
 }
 
